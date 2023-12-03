@@ -7,6 +7,7 @@ output: github_document
 
 ```{r setup, include=FALSE}
 library(tidyverse)
+library(ggfortify)
 ```
  
 ## Problem 2
@@ -39,6 +40,30 @@ ggplot(data = weather_boot_df, mapping = aes(x = r_squared)) +
 
 ggplot(data = weather_boot_df, mapping = aes(x = log_prod)) +
   geom_histogram(na.rm = TRUE)
+
+quantile(weather_boot_df$r_squared, c(0.025, 0.975))
+quantile(weather_boot_df$log_prod, c(0.025, 0.975), na.rm = TRUE)
+```
+ 
+ ## Problem 2
+```{r}
+birthweight <- read_csv("Data/birthweight.csv") %>%
+  mutate(
+    babysex = factor(babysex, levels = 1:2, labels = c("male", "female")),
+    frace = factor(frace, levels = c(1, 2, 3, 4, 8, 9), labels = c("White", "Black", "Asian", "Puerto Rican", "Other", "Unknown")),
+    mrace = factor(mrace, levels = c(1, 2, 3, 4, 8), labels = c("White", "Black", "Asian", "Puerto Rican", "Other")),
+    malform = factor(malform, levels = 0:1, labels = c("absent", "present"))
+  )
+```
+
+I picked a few variables that seemed likely to be predictive of birthweight and looked to be correlated to birthweight based on a scatterplot.
+```{r}
+bwt_model <- 
+  lm(bwt ~ blength + babysex + bhead + gaweeks + pnumsga + wtgain, 
+     data = birthweight)
+autoplot(bwt_model, which = 1, ncol = 1) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(aspect.ratio = 1)
 ```
  
  
